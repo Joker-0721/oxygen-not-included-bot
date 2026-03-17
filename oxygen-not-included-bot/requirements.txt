@@ -1,0 +1,2 @@
+# Python dependencies for Oxygen Not Included Bot
+# Add your dependencies here
