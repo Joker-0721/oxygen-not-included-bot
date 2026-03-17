@@ -1,0 +1,14 @@
+# Build outputs
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+
+# NuGet
+packages/
+*.nupkg
+
+# User settings
+*.user
+*.suo
