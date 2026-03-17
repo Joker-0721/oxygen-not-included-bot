@@ -1,25 +1,25 @@
 using Harmony;
-using KMod;
 using UnityEngine;
 
 /// <summary>
 /// Oxygen Not Included Automation Mod
 /// 缺氧遊戲自動化模組
 /// </summary>
-[HarmonyPatch]
-public class OniAutomationMod : UserMod2
+public class OniAutomationMod
 {
+    private static Harmony _harmony;
+    
     /// <summary>
-    /// 模組加載時調用
+    /// 模組加載時調用 (由遊戲調用)
     /// </summary>
-    public override void OnLoad()
+    public static void Init()
     {
         Debug.Log("[OniAutomation] Automation Link Initialized");
         Debug.Log("[OniAutomation] Mod loaded successfully");
         
-        // 初始化 Harmony 補丁
-        var harmony = HarmonyInstance.Create("com.oni.automation");
-        harmony.PatchAll();
+        // 初始化 Harmony 補丁 (Harmony 2.x API)
+        _harmony = new Harmony("com.oni.automation");
+        _harmony.PatchAll();
         
         Debug.Log("[OniAutomation] Harmony patches applied");
     }
@@ -27,12 +27,11 @@ public class OniAutomationMod : UserMod2
     /// <summary>
     /// 模組卸載時調用
     /// </summary>
-    public override void OnUnload()
+    public static void Shutdown()
     {
         Debug.Log("[OniAutomation] Mod unloaded");
         
-        var harmony = HarmonyInstance.Create("com.oni.automation");
-        harmony.UnpatchAll("com.oni.automation");
+        _harmony?.UnpatchAll("com.oni.automation");
     }
 }
 
@@ -40,7 +39,6 @@ public class OniAutomationMod : UserMod2
 /// 遊戲更新循環的補丁
 /// </summary>
 [HarmonyPatch]
-[HarmonyPatchCategory("OniAutomation")]
 public class GameUpdatePatch
 {
     private static float _updateInterval = 5f;  // 5秒更新一次
@@ -69,7 +67,6 @@ public class GameUpdatePatch
 /// 遊戲實例初始化補丁
 /// </summary>
 [HarmonyPatch(typeof(Game), "OnPrefabInit")]
-[HarmonyPatchCategory("OniAutomation")]
 public class GameInitPatch
 {
     /// <summary>
